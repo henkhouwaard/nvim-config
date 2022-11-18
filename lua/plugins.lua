@@ -74,6 +74,25 @@ function M.setup()
 			end,
 		}
 
+		-- Better icons
+    use {
+      "kyazdani42/nvim-web-devicons",
+      module = "nvim-web-devicons",
+      config = function()
+        require("nvim-web-devicons").setup { default = true }
+      end,
+    }
+
+    -- Better Comment
+    use {
+      "numToStr/Comment.nvim",
+      opt = true,
+      keys = { "gc", "gcc", "gbc" },
+      config = function()
+        require("Comment").setup {}
+      end,
+    }
+
     if packer_bootstrap then
       print "Restart Neovim required after installation!"
       require("packer").sync()
