@@ -38,6 +38,13 @@ function M.setup()
 
 		use "bluz71/vim-moonfly-colors"
 
+		use {
+			"goolord/alpha-nvim",
+			config = function()
+				require("config.splash").setup()
+			end,
+		}
+
     if packer_bootstrap then
       print "Restart Neovim required after installation!"
       require("packer").sync()
