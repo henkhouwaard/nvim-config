@@ -6,6 +6,10 @@ function M.setup()
 
   -- packer.nvim configuration
   local conf = {
+		profile = {
+			enable = true,
+			threshold = 0,
+		},
     display = {
       open_fn = function()
         return require("packer.util").float { border = "rounded" }
@@ -59,6 +63,14 @@ function M.setup()
 			event = "VimEnter",
 			config = function()
 				require("config.whichkey").setup()
+			end,
+		}
+
+		use {
+			"lukas-reineke/indent-blankline.nvim",
+			event = "BufReadPre",
+			config = function()
+				require("config.indentblankline").setup()
 			end,
 		}
 
