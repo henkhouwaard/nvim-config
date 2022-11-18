@@ -1,5 +1,4 @@
 local M = {}
-
 function M.setup()
   -- Indicate first time installation
   local packer_bootstrap = false
@@ -51,7 +50,7 @@ function M.setup()
 
     use {
       "TimUntersberger/neogit",
-      requires = "nvim-lua/plenary.nvim",
+      requires = { "nvim-lua/plenary.nvim" },
       cmd = "Neogit",
       config = function()
         require("config.neogit").setup()
@@ -100,18 +99,52 @@ function M.setup()
       config = function()
         require("config.lualine").setup()
       end,
-      requires = "nvim-web-devicons"
+      requires = { "nvim-web-devicons" }
     }
 
     -- Nvim Tree
     use {
       "kyazdani42/nvim-tree.lua",
-      requires = "kyazdani42/nvim-web-devicons",
+      requires = { "kyazdani42/nvim-web-devicons" },
       cmd = { "NvimTreeToggle", "NvimTreeClose" },
       config = function()
         require("config.nvimtree").setup()
       end,
     }
+
+    -- Buffer Line
+    use {
+      "akinsho/nvim-bufferline.lua",
+      event = "BufReadPre",
+      requires = { "nvim-web-devicons" },
+      config = function()
+        require("config.bufferline").setup()
+      end,
+    }
+
+    -- Telescope
+    use {
+      "nvim-telescope/telescope.nvim",
+      branch = "0.1.x",
+      requires = { 
+        { "nvim-lua/popup.nvim" },
+        { "nvim-lua/plenary.nvim" },
+        { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+        { "nvim-telescope/telescope-file-browser.nvim" },
+        { "nvim-telescope/telescope-project.nvim" },
+        {
+          "ahmedkhalf/project.nvim",
+          config = function()
+            require("project_nvim").setup {}
+          end,
+        },
+      },
+      config = function()
+        require("config.telescope")
+      end,
+    }
+
+
 
     if packer_bootstrap then
       print "Restart Neovim required after installation!"
