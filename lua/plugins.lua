@@ -45,6 +45,15 @@ function M.setup()
 			end,
 		}
 
+		use {
+			"TimUntersberger/neogit",
+			requires = "nvim-lua/plenary.nvim",
+			cmd = "Neogit",
+			config = function()
+				require("config.neogit").setup()
+			end,
+    }
+
     if packer_bootstrap then
       print "Restart Neovim required after installation!"
       require("packer").sync()
