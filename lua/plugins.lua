@@ -1,4 +1,5 @@
 local M = {}
+
 function M.setup()
   -- Indicate first time installation
   local packer_bootstrap = false
@@ -145,10 +146,62 @@ function M.setup()
     }
 
     use {
-      "nvim-treesitter/nvim-treesitter",
+      "hrsh7th/nvim-cmp",
+      event = "InsertEnter",
       opt = true,
-      event = "BufRead",
-      run = ":TSUpdate",
+      config = function()
+        require("config.cmp").setup()
+      end,
+      requires = {
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        "hrsh7th/cmp-nvim-lua",
+        "ray-x/cmp-treesitter",
+        "hrsh7th/cmp-cmdline",
+        "saadparwaiz1/cmp_luasnip",
+        "hrsh7th/cmp-calc",
+        "f3fora/cmp-spell",
+        "hrsh7th/cmp-emoji",
+        "rafamadriz/friendly-snippets",
+        {
+          "L3MON4D3/LuaSnip",
+          module = { "luasnip" },
+          config = function()
+            require("config.luasnip").setup()
+          end,
+        },
+      },
+    }
+
+    -- Auto pairs
+    use {
+      "windwp/nvim-autopairs",
+      module = { "nvim-autopairs.completion.cmp", "nvim-autopairs" },
+      config = function()
+        require("config.autopairs").setup()
+      end,
+    }
+
+    -- Auto tag
+    use {
+      "windwp/nvim-ts-autotag",
+      requires = "nvim-treesitter",
+      event = "InsertEnter",
+      config = function()
+        require("nvim-ts-autotag").setup { enable = true }
+      end,
+    }
+
+    -- End wise
+    use {
+      "RRethy/nvim-treesitter-endwise",
+      requires = "nvim-treesitter",
+      event = "InsertEnter",
+      disable = false,
+    }
+
+    use {
+      "nvim-treesitter/nvim-treesitter",
       config = function()
         require("config.treesitter").setup()
       end,
