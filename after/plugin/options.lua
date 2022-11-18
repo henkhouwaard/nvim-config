@@ -20,6 +20,7 @@ opt.updatetime = 250 --Decrease update time
 opt.signcolumn = "yes" -- Always show sign column
 opt.clipboard = "unnamedplus" -- Access system clipboard
 opt.timeoutlen = 300
+opt.laststatus = 3
 
 -- Highlight on yank
 vim.cmd [[
