@@ -144,6 +144,15 @@ function M.setup()
       end,
     }
 
+    use {
+      "nvim-treesitter/nvim-treesitter",
+      opt = true,
+      event = "BufRead",
+      run = ":TSUpdate",
+      config = function()
+        require("config.treesitter").setup()
+      end,
+    }
 
 
     if packer_bootstrap then
