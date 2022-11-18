@@ -6,6 +6,10 @@ function M.setup()
 
   -- packer.nvim configuration
   local conf = {
+    profile = {
+      enable = true,
+      threshold = 0,
+    },
     display = {
       open_fn = function()
         return require("packer.util").float { border = "rounded" }
@@ -36,31 +40,58 @@ function M.setup()
   local function plugins(use)
     use { "wbthomason/packer.nvim" }
 
-		use "bluz71/vim-moonfly-colors"
+    use "bluz71/vim-moonfly-colors"
 
-		use {
-			"goolord/alpha-nvim",
-			config = function()
-				require("config.splash").setup()
-			end,
-		}
-
-		use {
-			"TimUntersberger/neogit",
-			requires = "nvim-lua/plenary.nvim",
-			cmd = "Neogit",
-			config = function()
-				require("config.neogit").setup()
-			end,
+    use {
+      "goolord/alpha-nvim",
+      config = function()
+        require("config.splash").setup()
+      end,
     }
 
-		use {
-			"folke/which-key.nvim",
-			event = "VimEnter",
-			config = function()
-				require("config.whichkey").setup()
-			end,
-		}
+    use {
+      "TimUntersberger/neogit",
+      requires = "nvim-lua/plenary.nvim",
+      cmd = "Neogit",
+      config = function()
+        require("config.neogit").setup()
+      end,
+    }
+
+    use {
+      "folke/which-key.nvim",
+      event = "VimEnter",
+      config = function()
+        require("config.whichkey").setup()
+      end,
+    }
+
+    use {
+      "lukas-reineke/indent-blankline.nvim",
+      event = "BufReadPre",
+      config = function()
+        require("config.indentblankline").setup()
+      end,
+    }
+
+    -- Better icons
+    use {
+      "kyazdani42/nvim-web-devicons",
+      module = "nvim-web-devicons",
+      config = function()
+        require("nvim-web-devicons").setup { default = true }
+      end,
+    }
+
+    -- Better Comment
+    use {
+      "numToStr/Comment.nvim",
+      opt = true,
+      keys = { "gc", "gcc", "gbc" },
+      config = function()
+        require("Comment").setup {}
+      end,
+    }
 
     if packer_bootstrap then
       print "Restart Neovim required after installation!"
