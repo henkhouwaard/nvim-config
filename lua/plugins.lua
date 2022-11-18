@@ -36,6 +36,8 @@ function M.setup()
   local function plugins(use)
     use { "wbthomason/packer.nvim" }
 
+		use "bluz71/vim-moonfly-colors"
+
     if packer_bootstrap then
       print "Restart Neovim required after installation!"
       require("packer").sync()
