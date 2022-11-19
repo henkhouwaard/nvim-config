@@ -1,4 +1,3 @@
--- import null-ls plugin safely
 local null_ls = require "null-ls"
 
 -- for conciseness

@@ -153,6 +153,10 @@ function M.setup()
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
         "hrsh7th/cmp-nvim-lua",
+        {
+          "hrsh7th/cmp-nvim-lsp",
+          module = "cmp_nvim_lsp",
+        },
         "ray-x/cmp-treesitter",
         "hrsh7th/cmp-cmdline",
         "saadparwaiz1/cmp_luasnip",
@@ -177,45 +181,29 @@ function M.setup()
       end,
     }
 
-    -- Managing and installing lsp servers, linters and formatters
-    use {
-      "williamboman/mason.nvim",
-      requires = {
-        "williamboman/mason-lspconfig.nvim",
-        "jayp0521/mason-null-ls.nvim",
-        {
-          "jose-elias-alvarez/null-ls.nvim",
-          config = function()
-            require "config.lsp.null-ls"
-          end,
-        },
-      },
-      config = function()
-        require("config.lsp.mason").setup()
-      end,
-    }
-
     -- Configure lsp client
     use {
       "neovim/nvim-lspconfig",
-      requires = {
-        {
-          "hrsh7th/cmp-nvim-lsp",
-          module = "cmp_nvim_lsp",
-        },
-        {
-          "glepnir/lspsaga.nvim",
-          branch = "main",
-          config = function()
-            require "config.lsp.lspsaga"
-          end,
-        },
-        "jose-elias-alvarez/typescript.nvim",
-      },
       config = function()
-        require "config.lsp.lspconfig"
+        require "config.lsp"
+      end,
+      requires = {
+        "williamboman/mason.nvim",
+        "williamboman/mason-lspconfig.nvim",
+        "jayp0521/mason-null-ls.nvim",
+        "jose-elias-alvarez/null-ls.nvim",
+      },
+    }
+
+    -- lspsaga.nvim
+    use {
+      "glepnir/lspsaga.nvim",
+      cmd = { "Lspsaga" },
+      config = function()
+        require "config.lsp.lspsaga"
       end,
     }
+
     -- Auto pairs
     use {
       "windwp/nvim-autopairs",
