@@ -100,7 +100,7 @@ function M.setup()
       config = function()
         require("config.lualine").setup()
       end,
-      requires = { "nvim-web-devicons" }
+      requires = { "nvim-web-devicons" },
     }
 
     -- Nvim Tree
@@ -127,7 +127,7 @@ function M.setup()
     use {
       "nvim-telescope/telescope.nvim",
       branch = "0.1.x",
-      requires = { 
+      requires = {
         { "nvim-lua/popup.nvim" },
         { "nvim-lua/plenary.nvim" },
         { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
@@ -141,7 +141,7 @@ function M.setup()
         },
       },
       config = function()
-        require("config.telescope")
+        require "config.telescope"
       end,
     }
 
@@ -161,19 +161,61 @@ function M.setup()
         "hrsh7th/cmp-emoji",
         "rafamadriz/friendly-snippets",
         {
+          "onsails/lspkind.nvim",
+          module = { "lspkind" },
+        },
+        {
           "L3MON4D3/LuaSnip",
           module = { "luasnip" },
           config = function()
             require("config.luasnip").setup()
           end,
         },
-        "onsails/lspkind.nvim",
-        config = function()
-          require("config.cmp").setup()
-        end,
       },
+      config = function()
+        require("config.cmp").setup()
+      end,
     }
 
+    -- Managing and installing lsp servers, linters and formatters
+    use {
+      "williamboman/mason.nvim",
+      requires = {
+        "williamboman/mason-lspconfig.nvim",
+        "jayp0521/mason-null-ls.nvim",
+        {
+          "jose-elias-alvarez/null-ls.nvim",
+          config = function()
+            require "config.lsp.null-ls"
+          end,
+        },
+      },
+      config = function()
+        require("config.lsp.mason").setup()
+      end,
+    }
+
+    -- Configure lsp client
+    use {
+      "neovim/nvim-lspconfig",
+      requires = {
+        {
+          "hrsh7th/cmp-nvim-lsp",
+          module = "cmp_nvim_lsp",
+        },
+        {
+          "glepnir/lspsaga.nvim",
+          branch = "main",
+          config = function()
+            require "config.lsp.lspsaga"
+          end,
+        },
+        "jose-elias-alvarez/typescript.nvim",
+      },
+      config = function()
+        require "config.lsp.lspconfig"
+      end,
+    }
     -- Auto pairs
     use {
       "windwp/nvim-autopairs",
@@ -205,46 +247,11 @@ function M.setup()
     use {
       "nvim-treesitter/nvim-treesitter",
       run = function()
-        local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
+        local ts_update = require("nvim-treesitter.install").update { with_sync = true }
         ts_update()
       end,
       config = function()
         require("config.treesitter").setup()
-      end,
-    }
-
-    -- Managing and installing lsp servers, linters and formatters
-    use {
-      "williamboman/mason.nvim",
-      requires = { 
-        "williamboman/mason-lspconfig.nvim",
-        "jayp0521/mason-null-ls.nvim",
-        "jose-elias-alvarez/null-ls.nvim"
-      },
-      config = function()
-        require("config.lsp.mason").setup()
-      end,
-    }
-
-    -- Configure lsp client
-    use {
-      "neovim/nvim-lspconfig",
-      requires = {
-        { 
-          "hrsh7th/cmp-nvim-lsp",
-          module = "cmp_nvim_lsp",
-        },
-        { 
-          "glepnir/lspsaga.nvim", 
-          branch = "main",
-          config = function()
-            require("config.lsp.lspsaga")
-          end
-        },
-        "jose-elias-alvarez/typescript.nvim",
-      },
-      config = function()
-        require("config.lsp.lspconfig")
       end,
     }
 
