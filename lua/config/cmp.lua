@@ -2,117 +2,50 @@ local M = {}
 
 vim.o.completeopt = "menu,menuone,noselect"
 
-local types = require "cmp.types"
-local compare = require "cmp.config.compare"
 
 function M.setup()
-  local has_words_before = function()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
-  end
-
   local luasnip = require "luasnip"
   local cmp = require "cmp"
+  local lspkind = require "lspkind"
 
-  cmp.setup {
-    completion = { completeopt = "menu,menuone,noinsert", keyword_length = 1 },
-    snippet = {
-      expand = function(args)
-        require("luasnip").lsp_expand(args.body)
-      end,
-    },
-    formatting = {
-      format = function(entry, vim_item)
-        vim_item.menu = ({
-          buffer = "[Buffer]",
-          luasnip = "[Snip]",
-          nvim_lua = "[Lua]",
-          treesitter = "[Treesitter]",
-        })[entry.source.name]
-        return vim_item
-      end,
-    },
-    mapping = {
-      ["<C-k>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
-      ["<C-j>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
-      ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-      ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-      ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-      ["<C-e>"] = cmp.mapping { i = cmp.mapping.close(), c = cmp.mapping.close() },
-      ["<CR>"] = cmp.mapping {
-        i = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
-        c = function(fallback)
-          if cmp.visible() then
-            cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false }
-          else
-            fallback()
-          end
+  cmp.setup(
+    {
+      snippet = {
+        expand = function(args)
+          luasnip.lsp_expand(args.body)
         end,
       },
-      ["<Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        elseif luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
-        elseif has_words_before() then
-          cmp.complete()
-        else
-          fallback()
-        end
-      end, {
-        "i",
-        "s",
-        "c",
+      mapping = cmp.mapping.preset.insert({
+        ["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
+        ["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
+        ["<C-e>"] = cmp.mapping.abort(), -- close completion window
+        ["<CR>"] = cmp.mapping.confirm({ select = false }),
       }),
-      ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-          luasnip.jump(-1)
-        else
-          fallback()
-        end
-      end, {
-        "i",
-        "s",
-        "c",
+      -- sources for autocompletion
+      sources = cmp.config.sources({
+        { name = "nvim_lsp" }, -- lsp
+        { name = "luasnip" }, -- snippets
+        { name = "buffer" }, -- text within current buffer
+        { name = "path" }, -- file system paths
       }),
-    },
-    sources = {
-      { name = "nvim_lsp", max_item_count = 15 },
-      { name = "nvim_lsp_signature_help", max_item_count = 5 },
-      { name = "luasnip", max_item_count = 5 },
-      { name = "treesitter", max_item_count = 5 },
-      { name = "buffer", max_item_count = 5 },
-      { name = "nvim_lua" },
-      { name = "path" },
-      { name = "crates" },
-      { name = "spell" },
-      { name = "emoji" },
-      { name = "calc" },
-    },
-    window = {
-      documentation = {
-        border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-        winhighlight = "NormalFloat:NormalFloat,FloatBorder:TelescopeBorder",
+      -- configure lspkind for vs-code like icons
+      formatting = {
+        format = lspkind.cmp_format({
+          maxwidth = 50,
+          ellipsis_char = "...",
+        }),
       },
-    },
-  }
+    }
+  )
 
   -- Use buffer source for `/`
   cmp.setup.cmdline("/", {
     sources = {
       { name = "buffer" },
     },
-  })
-
-  -- Use cmdline & path source for ':'
-  cmp.setup.cmdline(":", {
-    sources = cmp.config.sources({
-      { name = "path" },
-    }, {
-      { name = "cmdline" },
-    }),
   })
 
   -- Auto pairs

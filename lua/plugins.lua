@@ -149,9 +149,6 @@ function M.setup()
       "hrsh7th/nvim-cmp",
       event = "InsertEnter",
       opt = true,
-      config = function()
-        require("config.cmp").setup()
-      end,
       requires = {
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
@@ -170,6 +167,10 @@ function M.setup()
             require("config.luasnip").setup()
           end,
         },
+        "onsails/lspkind.nvim",
+        config = function()
+          require("config.cmp").setup()
+        end,
       },
     }
 
@@ -200,13 +201,52 @@ function M.setup()
       disable = false,
     }
 
+    -- Tree sitter
     use {
       "nvim-treesitter/nvim-treesitter",
+      run = function()
+        local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
+        ts_update()
+      end,
       config = function()
         require("config.treesitter").setup()
       end,
     }
 
+    -- Managing and installing lsp servers, linters and formatters
+    use {
+      "williamboman/mason.nvim",
+      requires = { 
+        "williamboman/mason-lspconfig.nvim",
+        "jayp0521/mason-null-ls.nvim",
+        "jose-elias-alvarez/null-ls.nvim"
+      },
+      config = function()
+        require("config.lsp.mason").setup()
+      end,
+    }
+
+    -- Configure lsp client
+    use {
+      "neovim/nvim-lspconfig",
+      requires = {
+        { 
+          "hrsh7th/cmp-nvim-lsp",
+          module = "cmp_nvim_lsp",
+        },
+        { 
+          "glepnir/lspsaga.nvim", 
+          branch = "main",
+          config = function()
+            require("config.lsp.lspsaga")
+          end
+        },
+        "jose-elias-alvarez/typescript.nvim",
+      },
+      config = function()
+        require("config.lsp.lspconfig")
+      end,
+    }
 
     if packer_bootstrap then
       print "Restart Neovim required after installation!"
@@ -217,6 +257,7 @@ function M.setup()
   packer_init()
 
   local packer = require "packer"
+
   packer.init(conf)
   packer.startup(plugins)
 end
