@@ -1,5 +1,8 @@
-local status, _ = pcall(require, "moonfly")
+local status, _ = pcall(require, "nightfly")
 if not status then
-	return
+  return
 end
-vim.cmd [[colorscheme moonfly]]
+vim.cmd [[colorscheme nightfly]]
+vim.cmd [[hi def IlluminatedWordText gui=underline]]
+vim.cmd [[hi def IlluminatedWordRead gui=underline]]
+vim.cmd [[hi def IlluminatedWordWrite gui=underline]]

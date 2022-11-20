@@ -1,8 +1,4 @@
 local servers = {
-  tsserver = {},
-  html = {},
-  cssls = {},
-  tailwindcss = {},
   sumneko_lua = {
     settings = {
       Lua = {
@@ -38,13 +34,10 @@ local servers = {
 }
 
 local formatters = {
-  prettier = {},
   stylua = {},
 }
 
-local linters = {
-  eslint_d = {},
-}
+local linters = {}
 
 return {
   servers = servers,

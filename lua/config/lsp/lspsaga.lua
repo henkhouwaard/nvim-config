@@ -1,7 +1,7 @@
 -- import lspsaga safely
-local saga = require("lspsaga")
+local saga = require "lspsaga"
 
-saga.init_lsp_saga({
+saga.init_lsp_saga {
   -- keybinds for navigation in lspsaga window
   move_in_saga = { prev = "<C-k>", next = "<C-j>" },
   -- use enter to open file with finder
@@ -12,4 +12,4 @@ saga.init_lsp_saga({
   definition_action_keys = {
     edit = "<CR>",
   },
-})
+}

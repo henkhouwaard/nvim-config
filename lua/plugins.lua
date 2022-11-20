@@ -41,6 +41,24 @@ function M.setup()
     use { "wbthomason/packer.nvim" }
 
     use "bluz71/vim-moonfly-colors"
+    use "Mofiqul/dracula.nvim"
+    use "ellisonleao/gruvbox.nvim"
+    use "bluz71/vim-nightfly-colors"
+    use "sainnhe/everforest"
+    use "sainnhe/sonokai"
+    use "folke/tokyonight.nvim"
+
+    use "rafcamlet/nvim-luapad"
+    use "folke/neodev.nvim"
+
+    -- Notification
+    use {
+      "rcarriga/nvim-notify",
+      event = "VimEnter",
+      config = function()
+        vim.notify = require "notify"
+      end,
+    }
 
     use {
       "goolord/alpha-nvim",
@@ -123,6 +141,18 @@ function M.setup()
       end,
     }
 
+    -- trouble.nvim
+    use {
+      "folke/trouble.nvim",
+      cmd = { "TroubleToggle", "Trouble" },
+      module = { "trouble.providers.telescope" },
+      config = function()
+        require("trouble").setup {
+          use_diagnostic_signs = true,
+        }
+      end,
+    }
+
     -- Telescope
     use {
       "nvim-telescope/telescope.nvim",
@@ -145,6 +175,8 @@ function M.setup()
       end,
     }
 
+    use "rafamadriz/friendly-snippets"
+    use "honza/vim-snippets"
     use {
       "hrsh7th/nvim-cmp",
       event = "InsertEnter",
@@ -157,23 +189,23 @@ function M.setup()
           "hrsh7th/cmp-nvim-lsp",
           module = "cmp_nvim_lsp",
         },
+        "hrsh7th/cmp-nvim-lsp-signature-help",
         "ray-x/cmp-treesitter",
         "hrsh7th/cmp-cmdline",
         "saadparwaiz1/cmp_luasnip",
         "hrsh7th/cmp-calc",
         "f3fora/cmp-spell",
         "hrsh7th/cmp-emoji",
-        "rafamadriz/friendly-snippets",
         {
           "onsails/lspkind.nvim",
           module = { "lspkind" },
         },
         {
           "L3MON4D3/LuaSnip",
-          module = { "luasnip" },
           config = function()
             require("config.luasnip").setup()
           end,
+          module = { "luasnip" },
         },
       },
       config = function()
@@ -192,6 +224,7 @@ function M.setup()
         "williamboman/mason-lspconfig.nvim",
         "jayp0521/mason-null-ls.nvim",
         "jose-elias-alvarez/null-ls.nvim",
+        "RRethy/vim-illuminate",
       },
     }
 
